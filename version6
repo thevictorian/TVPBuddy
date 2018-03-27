@@ -1,0 +1,653 @@
+#Include <File.au3>
+#include <GUIConstantsEx.au3>
+#include <StaticConstants.au3>
+#include <Date.au3>
+
+
+Global $cPath,$cFilename,$days,$dwell
+Global $Button1,$Button2,$Button3,$Button4,$Button5,$Button6,$Button7,$Button8
+Global $Button9,$Button10,$Button11,$Button12,$Button13,$Button14,$Button15,$Button16
+TVPBuddy()
+
+
+
+Func TVPBuddy()
+
+  $TVPBuddy = GUICreate("TVPBuddy",280,360)
+  GUISetState(@SW_SHOW,$TVPBuddy)
+
+  $dwell = GUICtrlCreateCombo ("55",80,10,50)
+  GUICtrlCreateLabel("Set Dwell",25,15)
+  GUICtrlSetData($dwell, "100|150|200|250|300")
+
+  $days =  GUICtrlCreateInput ("3",230,10,30)
+  GUICtrlCreateLabel("Set Days",175,15)
+  GUICtrlCreateGraphic(10,35,260,1,$SS_SUNKEN )
+  $Button1 = GUICtrlCreateButton("Print Median", 150,40, 120, 30)
+  $Button2 = GUICtrlCreateButton("Print Bidirect",  150,75, 120, 30)
+  $Button3 = GUICtrlCreateButton("Print Class", 150,110, 120, 30)
+  $Button4 = GUICtrlCreateButton("Print Speed", 150,145, 120, 30)
+  $Button5 = GUICtrlCreateButton("Export Median", 150,180, 120, 30)
+  $Button6 = GUICtrlCreateButton("Export Bidirect", 150,215, 120, 30)
+  $Button7 = GUICtrlCreateButton("Export Class", 150,250, 120, 30)
+  $Button8 = GUICtrlCreateButton("Export Speed", 150,285, 120, 30)
+  $Button11 = GUICtrlCreateButton("Print Median", 10,40, 120, 30)
+  $Button12 = GUICtrlCreateButton("Print Class",  10,75, 120, 30)
+  $Button13 = GUICtrlCreateButton("Print Speed", 10,110, 120, 30)
+  $Button14 = GUICtrlCreateButton("Export Median", 10,145, 120, 30)
+  $Button15 = GUICtrlCreateButton("Export Class", 10,180, 120, 30)
+  $Button16 = GUICtrlCreateButton("Export Speed", 10,215, 120, 30)
+  GUICtrlCreateGraphic(10,320,260,1,$SS_SUNKEN )
+  $Button9 = GUICtrlCreateButton("Stop TVP Buddy", 10,325, 120, 30)
+  $Button10 = GUICtrlCreateButton("Open New File", 150,325, 120, 30)
+   While 1
+	  $msg = GUIGetMsg()
+	  $MyTitle = WinGetTitle('[ACTIVE]')
+
+     Select
+	  Case $MyTitle = 'Older scheme used'
+		 ControlClick('Older scheme used',"","Use file's scheme")
+	  Case $MyTitle = 'WARNING: Corrupted data encountered!'
+		 ControlClick('WARNING: Corrupted data encountered!',"","OK")
+	  Case $MyTitle ='Unsaved data, save first?'
+		 ControlClick('Unsaved data, save first?',"","[CLASS:Button; INSTANCE:2]")
+	  Case $msg = $GUI_EVENT_CLOSE
+		 ExitLoop
+	  Case $msg = $Button1
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			MedianLayout()
+			VolumeReport()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			MedianLayout()
+			VolumeReport()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			MedianLayout()
+			VolumeReport()
+		 EndIf
+		 GUIenable()
+	   Case $msg = $Button2
+		  GUIdisable()
+		 If WinExists('Preview') Then
+			WinActivate('Preview')
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			VolumeReport()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			VolumeReport()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			VolumeReport()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button3
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinActivate('Preview')
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			ClassReportBidi()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			ClassReportBidi()
+
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			ClassReportBidi()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button4
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			SpeedReportBidi()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			SpeedReportBidi()
+
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			SpeedReportBidi()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button5
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			MedianLayout()
+			ExportVolume()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			MedianLayout()
+			ExportVolume()
+
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			MedianLayout()
+			ExportVolume()
+
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button6
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			ExportVolume()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			ExportVolume()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			ExportVolume()
+		 EndIf
+		 GUIenable()
+
+	  Case $msg = $Button7
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			ExportClassBidi()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			ExportClassBidi()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			ExportClassBidi()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button8
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			BidirectLayout()
+			ExportSpeedBidi()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			BidirectLayout()
+			ExportSpeedBidi()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			BidirectLayout()
+			ExportSpeedBidi()
+		 EndIf
+		 GUIenable()
+
+	  Case $msg = $Button9
+		 GUIDelete($TVPBuddy)
+         Exit
+	  Case $msg = $Button10
+		 GUIdisable()
+		 If WinExists('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com') Then
+			If WinExists('Preview') Then
+			   WinClose('Preview')
+			   WinWaitClose('Preview')
+			   OpenTVP()
+			Else
+			   OpenTVP()
+			EndIf
+		 Else
+			$cPath = FileSelectFolder("Choose Folder","C:/")
+			Run("C:\Program Files (x86)\VehicleCounts.com\TrafficViewerPro\TrafficViewerPro.exe","",@SW_SHOWMAXIMIZED)
+			OpenTVP()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button11
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			MedianLayout()
+			VolumeReport()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			MedianLayout()
+			VolumeReport()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			MedianLayout()
+			VolumeReport()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button12
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinActivate('Preview')
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			SingleDirectLayout()
+			ClassReportSingle()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			SingleDirectLayout()
+			ClassReportSingle()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			SingleDirectLayout()
+			ClassReportSingle()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button13
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinActivate('Preview')
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			SingleDirectLayout()
+			ClassReportSingle()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			SingleDirectLayout()
+			SpeedReportSingle()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			SingleDirectLayout()
+			SpeedReportSingle()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button14
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			MedianLayout()
+			ExportVolume()
+
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			MedianLayout()
+			ExportVolume()
+
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			MedianLayout()
+			ExportVolume()
+
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button15
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			SingleDirectLayout()
+			ExportClassSingle()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			SingleDirectLayout()
+			ExportClassSingle()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			SingleDirectLayout()
+			ExportClassSingle()
+		 EndIf
+		 GUIenable()
+	  Case $msg = $Button16
+		 GUIdisable()
+		 If WinExists('Preview') Then
+			WinClose('Preview')
+			WinWaitClose('Preview')
+			SingleDirectLayout()
+			ExportSpeedSingle()
+		 ElseIf $MyTitle = 'Road Layout & Hose Setup' Then
+			ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+			SingleDirectLayout()
+			ExportSpeedSingle()
+		 Else
+			WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+			SingleDirectLayout()
+			ExportSpeedSingle()
+		 EndIf
+		 GUIenable()
+   EndSelect
+
+WEnd
+EndFunc
+
+Func ExportVolume()
+;Format Export
+
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Export Data")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+75)
+MouseClick("left",$Apos[0]+300,$Apos[1]+70)
+MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+
+;Export Action
+SetExportPath()
+EndFunc
+
+Func ExportClassBidi()
+;Format Export
+
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Export Data")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+215)
+MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+
+;Export Action
+WinWaitActive('Multiple File Export...')
+ControlFocus('Multiple File Export...',"","[CLASS:TEdit; INSTANCE:1]")
+ControlSetText('Multiple File Export...',"","[CLASS:TEdit; INSTANCE:1]",$cPath)
+ControlFocus('Multiple File Export...',"","[CLASS:Edit; INSTANCE:1]")
+Send($cFilename)
+EndFunc
+
+Func ExportSpeedBidi()
+;Format Export
+
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Export Data")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+290)
+MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+
+;Export Action
+WinWaitActive('Multiple File Export...')
+ControlFocus('Multiple File Export...',"","[CLASS:TEdit; INSTANCE:1]")
+ControlSetText('Multiple File Export...',"","[CLASS:TEdit; INSTANCE:1]",$cPath)
+ControlFocus('Multiple File Export...',"","[CLASS:Edit; INSTANCE:1]")
+ControlSetText('Multiple File Export...',"","[CLASS:Edit; INSTANCE:1]",$cFilename)
+EndFunc
+
+Func ExportClassSingle()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Export Data")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+155)
+MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+
+;Export Action
+SetExportPath()
+EndFunc
+
+Func ExportSpeedSingle()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Export Data")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+190)
+MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+
+;Export Action
+SetExportPath()
+EndFunc
+
+Func MedianLayout()
+;Set to Median in 'Road Layout & Hose Setup'
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Data Settings")
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Change Layout")
+WinActivate('Road Layout & Hose Setup')
+WinWaitActive('Road Layout & Hose Setup')
+$Apos = WinGetPos('Road Layout & Hose Setup')
+MouseClick("left",$Apos[0]+400,$Apos[1]+70)
+ControlClick('Road Layout & Hose Setup',"","Select Layout")
+SetDwellMedian()
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+EndFunc
+
+Func BidirectLayout()
+;Set to Median in 'Road Layout & Hose Setup'
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Data Settings")
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Change Layout")
+WinActivate('Road Layout & Hose Setup')
+WinWaitActive('Road Layout & Hose Setup')
+$Apos = WinGetPos('Road Layout & Hose Setup')
+MouseClick("left",$Apos[0]+275,$Apos[1]+200)
+ControlClick('Road Layout & Hose Setup',"","Select Layout")
+SetDwellClass()
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+EndFunc
+
+Func SingleDirectLayout()
+;Set to Median in 'Road Layout & Hose Setup'
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Data Settings")
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Change Layout")
+WinActivate('Road Layout & Hose Setup')
+WinWaitActive('Road Layout & Hose Setup')
+$Apos = WinGetPos('Road Layout & Hose Setup')
+MouseClick("left",$Apos[0]+600,$Apos[1]+100)
+ControlClick('Road Layout & Hose Setup',"","Select Layout")
+SetDwellClass()
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Continue")
+EndFunc
+
+Func VolumeReport()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Print Reports")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+70)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+EndFunc
+
+Func SpeedReportBidi()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Print Reports")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+240)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+EndFunc
+
+Func SpeedReportSingle()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Print Reports")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+185)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+$endDate = ControlGetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:4]")
+ControlClick('Start/Stop Time',"","Continue")
+EndFunc
+
+Func ClassReportBidi()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Print Reports")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+160)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+$endDate = ControlGetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:4]")
+ControlClick('Start/Stop Time',"","Continue")
+EndFunc
+
+Func ClassReportSingle()
+;Print Report
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+ControlClick('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","Print Reports")
+WinWaitActive('Start/Stop Time')
+$Apos = WinGetPos('Start/Stop Time')
+MouseClick("left",$Apos[0]+300,$Apos[1]+147)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+325)
+;MouseClick("left",$Apos[0]+100,$Apos[1]+400)
+SetStartDate()
+ControlClick('Start/Stop Time',"","Continue")
+EndFunc
+
+Func SetStartDate()
+ControlClick('Start/Stop Time',"","Select specific times")
+$endDate = ControlGetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:2]")
+$endTime = ControlGetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:1]")&":00"
+$endDate_month = StringMid($endDate,1,2)
+$endDate_day = StringMid($endDate,4,2)
+$endDate_year ="20"& StringMid($endDate,7,2)
+
+$endDateTime = $endDate_year&"/"&$endDate_month&"/"&$endDate_day&" "&$endTime
+$startDateTime = _DateAdd ('d', "-"&GUICtrlRead($days), $endDateTime )
+$startDate_day = StringMid($startDateTime,9,2)
+$startDate_month = StringMid($startDateTime,6,2)
+$startDate_year = StringMid($startDateTime,3,2)
+$startDate = $startDate_month&"/"&$startDate_day&"/"&$startDate_year
+$startTime = "00:00"
+ControlSetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:4]",$startDate)
+ControlSetText('Start/Stop Time',"","[CLASS:TMaskEdit; INSTANCE:3]",$startTime)
+EndFunc
+
+Func SetDwellMedian()
+   WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+   ControlFocus('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:6]")
+   ControlSetText('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:6]",GUICtrlRead($dwell))
+   ControlFocus('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:4]")
+   ControlSetText('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:4]",GUICtrlRead($dwell))
+EndFunc
+
+Func SetDwellClass()
+   ControlFocus('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:6]")
+   ControlSetText('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com',"","[CLASS:TEdit; INSTANCE:6]",GUICtrlRead($dwell))
+EndFunc
+
+Func OpenTVP()
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinWaitActive('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinMenuSelectItem("TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com","","&File","&Open...")
+ControlClick('Unsaved data, save first?',"","[CLASS:Button; INSTANCE:2]")
+WinWaitActive('Select data file to open')
+ControlSetText('Select data file to open',"" , "[CLASS:Edit; INSTANCE:1]", $cPath)
+ControlClick('Select data file to open',"","&Open")
+While WinExists('Select data file to open')
+   If StringMid(ControlGetText('Select data file to open',"" , "[CLASS:ToolbarWindow32; INSTANCE:3]"),10) <> "" And ControlGetText('Select data file to open',"" , "[CLASS:Edit; INSTANCE:1]") <> "" Then
+  $cPath =  StringMid(ControlGetText('Select data file to open',"" , "[CLASS:ToolbarWindow32; INSTANCE:3]"),10)
+  $cFilename = ControlGetText('Select data file to open',"" , "[CLASS:Edit; INSTANCE:1]")
+  EndIf
+Wend
+
+WinWaitClose('Select data file to open')
+EndFunc
+
+Func CloseTVP()
+WinActivate('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+WinMenuSelectItem("TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com","","&File","E&xit")
+While 1
+   If WinExists('Unsaved data, save first?') Then
+	  WinActivate('Unsaved data, save first?')
+	  ControlClick('Unsaved data, save first?',"","[CLASS:Button; INSTANCE:2]")
+	  ExitLoop
+   EndIf
+Wend
+
+WinWaitClose('TrafficViewer Pro  v1.6.4.124 - by VehicleCounts.com')
+EndFunc
+
+Func SetExportPath()
+WinWaitActive('Export Data As...')
+ControlFocus('Export Data As...',"","[CLASS:Edit; INSTANCE:1]")
+ControlSetText('Export Data As...',"","[CLASS:Edit; INSTANCE:1]",$cPath)
+;ControlClick('Export Data As...',"","&Save")
+EndFunc
+
+
+Func GUIdisable()
+   GUICtrlSetState($Button1,$GUI_DISABLE)
+   GUICtrlSetState($Button2,$GUI_DISABLE)
+   GUICtrlSetState($Button3,$GUI_DISABLE)
+   GUICtrlSetState($Button4,$GUI_DISABLE)
+   GUICtrlSetState($Button5,$GUI_DISABLE)
+   GUICtrlSetState($Button6,$GUI_DISABLE)
+   GUICtrlSetState($Button7,$GUI_DISABLE)
+   GUICtrlSetState($Button8,$GUI_DISABLE)
+   GUICtrlSetState($Button9,$GUI_DISABLE)
+   GUICtrlSetState($Button10,$GUI_DISABLE)
+   GUICtrlSetState($Button11,$GUI_DISABLE)
+   GUICtrlSetState($Button12,$GUI_DISABLE)
+   GUICtrlSetState($Button13,$GUI_DISABLE)
+   GUICtrlSetState($Button14,$GUI_DISABLE)
+   GUICtrlSetState($Button15,$GUI_DISABLE)
+   GUICtrlSetState($Button16,$GUI_DISABLE)
+   EndFunc
+
+   Func GUIenable()
+   GUICtrlSetState($Button1,$GUI_ENABLE)
+   GUICtrlSetState($Button2,$GUI_ENABLE)
+   GUICtrlSetState($Button3,$GUI_ENABLE)
+   GUICtrlSetState($Button4,$GUI_ENABLE)
+   GUICtrlSetState($Button5,$GUI_ENABLE)
+   GUICtrlSetState($Button6,$GUI_ENABLE)
+   GUICtrlSetState($Button7,$GUI_ENABLE)
+   GUICtrlSetState($Button8,$GUI_ENABLE)
+   GUICtrlSetState($Button9,$GUI_ENABLE)
+   GUICtrlSetState($Button10,$GUI_ENABLE)
+   GUICtrlSetState($Button11,$GUI_ENABLE)
+   GUICtrlSetState($Button12,$GUI_ENABLE)
+   GUICtrlSetState($Button13,$GUI_ENABLE)
+   GUICtrlSetState($Button14,$GUI_ENABLE)
+   GUICtrlSetState($Button15,$GUI_ENABLE)
+   GUICtrlSetState($Button16,$GUI_ENABLE)
+   EndFunc
